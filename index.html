@@ -3,157 +3,212 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Map Detectives</title>
+<title>Map Detectives! 🧭</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#fff8e7;--card:#ffffff;--text:#2b2a33;--muted:#6b6a75;--road:#e3e0d6;--park:#9bd78f;--lake:#6ec1ee;--line:#b9b5a6;--accent:#ff7a3d;--good:#2e9b4e;--bad:#d64545;--hl:#ffe14d}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1d2230;--card:#2a3045;--text:#f3f1ea;--muted:#aab0c4;--road:#3b4158;--park:#2f6b3b;--lake:#2a7bb0;--line:#555c78;--accent:#ff9158;--good:#5fd283;--bad:#ff7b7b;--hl:#b99a00}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#1d2230;--card:#2a3045;--text:#f3f1ea;--muted:#aab0c4;--road:#3b4158;--park:#2f6b3b;--lake:#2a7bb0;--line:#555c78;--accent:#ff9158;--good:#5fd283;--bad:#ff7b7b;--hl:#b99a00}
+--dark:#3D2C5E;--card:#fff;--muted:#888;--sub:#c060a0;--pink:#e060b0;--pinkd:#8a1060;--yellow:#FFD93D;--mint:#6BCFB5;--coral:#FF7F7F;
+--road:#f3eee3;--park:#b8ecc8;--lake:#8fd3f4;--line:rgba(61,44,94,.14);--bgA:#fff0f8;--bgB:#e8faf0;--bgC:#fffbe8;--box:rgba(0,0,0,.03)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--dark:#f4eefc;--card:#2d2644;--muted:#b3a9cc;--sub:#f0a0d8;--road:#4a4263;--park:#2f6b4a;--lake:#2a7bb0;--line:rgba(255,255,255,.16);--bgA:#221a35;--bgB:#1c2a34;--bgC:#2a2538;--box:rgba(255,255,255,.06)}}
+:root[data-theme="dark"]{color-scheme:dark;--dark:#f4eefc;--card:#2d2644;--muted:#b3a9cc;--sub:#f0a0d8;--road:#4a4263;--park:#2f6b4a;--lake:#2a7bb0;--line:rgba(255,255,255,.16);--bgA:#221a35;--bgB:#1c2a34;--bgC:#2a2538;--box:rgba(255,255,255,.06)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:12px}
-h1{margin:4px 0;font-size:1.7rem}
-.remind{background:var(--card);border:3px dashed var(--accent);border-radius:14px;padding:8px 14px;max-width:560px;text-align:center;font-size:1.05rem;margin:6px 0}
-.wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:flex-start;width:100%;max-width:900px}
-.mapbox{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:4px}
-.ylab,.xlab{display:grid;font-weight:bold;color:var(--muted);text-align:center;font-size:.95rem}
-.ylab{grid-template-rows:repeat(10,1fr);align-items:center;width:1.4rem}
-.xlab{grid-column:2;grid-template-columns:repeat(10,1fr)}
-.axisT{grid-column:2;text-align:center;font-size:.8rem;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(10,1fr);width:min(88vw,460px);aspect-ratio:1;grid-template-rows:repeat(10,1fr);border:3px solid var(--text);border-radius:6px;overflow:hidden;background:var(--road)}
-.cell{min-width:0;min-height:0;overflow:hidden;line-height:1;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,4.6vw,26px);position:relative;cursor:pointer;user-select:none;padding:0}
-.cell.park{background:var(--park)}
-.cell.lake{background:var(--lake)}
-.cell.hl{outline:4px solid var(--hl);outline-offset:-4px;background-image:linear-gradient(var(--hl),var(--hl));background-blend-mode:multiply;animation:pulse 0.8s infinite alternate}
-.cell.ok{box-shadow:inset 0 0 0 4px var(--good)}
-.cell.no{box-shadow:inset 0 0 0 4px var(--bad)}
-@keyframes pulse{to{filter:brightness(1.2)}}
-.label{position:absolute;bottom:0;left:0;right:0;font-size:.5rem;line-height:1;text-align:center;font-weight:bold;background:rgba(255,255,255,.7);color:#222}
-.panel{background:var(--card);border-radius:16px;padding:16px;width:min(88vw,340px);box-shadow:0 3px 10px rgba(0,0,0,.15)}
-.stars{font-size:1.4rem;letter-spacing:2px}
-.q{font-size:1.3rem;margin:10px 0;min-height:4.2rem}
-.ans{display:flex;align-items:center;gap:8px;font-size:2.2rem;font-weight:bold}input{font:inherit;font-size:1.8rem;width:100%;min-width:0;text-align:center;padding:8px;border-radius:12px;border:3px solid var(--line);background:var(--bg);color:var(--text)}
-button{font:inherit;font-size:1.2rem;font-weight:bold;border:0;border-radius:12px;background:var(--accent);color:#fff;padding:10px 18px;cursor:pointer;margin-top:10px;width:100%}
-button.alt{background:var(--muted)}
-.msg{min-height:3.2rem;margin-top:8px;font-size:1.1rem;font-weight:bold}
-.msg.good{color:var(--good)}.msg.bad{color:var(--bad)}
-.legend{font-size:.9rem;color:var(--muted);margin-top:8px}
-.big{font-size:3rem;text-align:center}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito','Trebuchet MS',sans-serif;color:var(--dark);min-height:100vh;overflow-x:hidden;background:var(--bgA)}
+.bg{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,var(--bgA) 0%,var(--bgB) 50%,var(--bgC) 100%)}
+.particle{position:fixed;pointer-events:none;z-index:0;font-size:1.5rem;opacity:0;animation:floatUp linear infinite}
+@keyframes floatUp{0%{transform:translateY(110vh) rotate(0);opacity:0}10%,90%{opacity:.6}100%{transform:translateY(-10vh) rotate(360deg);opacity:0}}
+.star-burst{position:fixed;pointer-events:none;z-index:999;font-size:2rem;animation:starFly 1.2s ease-out forwards}
+@keyframes starFly{0%{transform:translate(0,0) scale(0);opacity:1}60%{opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(1.5);opacity:0}}
+.confetti-piece{position:fixed;top:0;pointer-events:none;z-index:101;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:.5}}
+.container{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 14px 40px}
+header{text-align:center;margin-bottom:14px;animation:bounceIn .8s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bounceIn{0%{transform:scale(0) rotate(-10deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.crown{font-size:2.6rem;line-height:1}
+h1{font-family:'Fredoka One','Trebuchet MS',cursive;font-weight:400;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:1px;margin:4px 0;text-shadow:3px 3px 0 #ff9de2,5px 5px 0 rgba(255,160,220,.2)}
+.subtitle{font-size:1rem;font-weight:700;color:var(--sub)}
+.progress-area{width:100%;max-width:520px;background:var(--card);border-radius:20px;padding:12px 18px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:16px;animation:slideDown .6s .3s both}
+@keyframes slideDown{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.level-label{font-weight:800;font-size:.95rem}
+.score-badge{padding:3px 12px;border-radius:20px;font-family:'Fredoka One',cursive;font-size:1rem;background:var(--yellow);color:#3D2C5E}
+.stars-row{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
+.star-icon{font-size:1.2rem;filter:grayscale(1) opacity(.25);transition:filter .3s}
+.star-icon.earned{filter:none;animation:starPop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes starPop{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+.bar{height:10px;background:var(--box);border-radius:10px;overflow:hidden}
+.fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#ff80cc,#e060b0);transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+.card{background:var(--card);border-radius:32px;padding:22px 20px 24px;box-shadow:0 8px 40px rgba(0,0,0,.10);width:100%;max-width:520px;text-align:center;position:relative;animation:slideUp .6s .2s both}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.card::before{content:'';position:absolute;inset:0;border-radius:32px;pointer-events:none;background:linear-gradient(135deg,rgba(255,160,220,.06),rgba(160,240,200,.06))}
+.remind{background:rgba(255,217,61,.25);border:3px dashed var(--yellow);border-radius:18px;padding:8px 12px;font-weight:800;font-size:.95rem;margin-bottom:14px;position:relative}
+.character{font-size:3rem;animation:wiggle 2s ease-in-out infinite}
+@keyframes wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.q{font-size:1.15rem;font-weight:800;color:var(--sub);margin:6px 0 12px;min-height:3.4rem;position:relative}
+.q b{font-family:'Fredoka One',cursive;font-weight:400;color:var(--dark);font-size:1.3rem}
+.ans{display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Fredoka One',cursive;font-size:3rem;color:var(--sub);position:relative}
+.ans input{font-family:'Fredoka One','Trebuchet MS',cursive;font-size:2.4rem;color:var(--dark);width:82px;height:82px;text-align:center;border-radius:22px;border:4px dashed #ccc;background:var(--box);outline:none;transition:all .3s}
+.ans input:focus,.ans input:not(:placeholder-shown){border-color:var(--mint);background:rgba(107,207,181,.12)}
+.btn{font-family:'Fredoka One','Trebuchet MS',cursive;font-weight:400;font-size:1.3rem;border:none;cursor:pointer;padding:14px;border-radius:18px;color:#fff;width:100%;margin-top:14px;transition:transform .1s,box-shadow .1s;-webkit-tap-highlight-color:transparent;position:relative}
+.btn.check{background:linear-gradient(135deg,#6bcfb5,#3db899);box-shadow:0 5px 0 #2a9a7a}
+.btn.check:active{transform:translateY(4px);box-shadow:0 1px 0 #2a9a7a}
+.btn.next{background:var(--yellow);color:#3D2C5E;box-shadow:0 5px 0 #c9a200}
+.btn.next:active{transform:translateY(4px);box-shadow:0 1px 0 #c9a200}
+.msg{min-height:3rem;margin-top:12px;font-size:1.05rem;font-weight:800;position:relative}
+.msg.good{color:#2a9a7a}.msg.bad{color:#d84a4a}
+.mapbox{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:4px;justify-content:center;margin:16px 0 10px;position:relative}
+.ylab{display:grid;grid-template-rows:repeat(10,1fr);width:1.4rem}
+.xlab{grid-column:2;display:grid;grid-template-columns:repeat(10,1fr)}
+.ylab span,.xlab span{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--sub);display:flex;align-items:center;justify-content:center}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);width:min(80vw,440px);aspect-ratio:1;border:4px solid var(--dark);border-radius:14px;overflow:hidden;background:var(--road)}
+.cell{min-width:0;min-height:0;overflow:hidden;line-height:1;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,4.4vw,24px);cursor:pointer;user-select:none;background:var(--road)}
+.cell.park{background:var(--park)}.cell.lake{background:var(--lake)}
+.cell.hl{background:var(--yellow)!important;animation:pulse .7s infinite alternate}
+@keyframes pulse{to{transform:scale(1.12)}}
+.cell.ok{box-shadow:inset 0 0 0 4px var(--mint);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+.cell.no{box-shadow:inset 0 0 0 4px var(--coral)}
+@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
+.keyrow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-weight:800;font-size:.8rem;position:relative}
+.chip{background:var(--box);border-radius:14px;padding:3px 10px}
+.big{font-size:3.5rem}
+.end{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--dark)}
 </style>
 </head>
 <body>
-<h1>🗺️ Map Detectives</h1>
-<div class="remind">Go <b>across</b> first ➡️ (along the corridor), then <b>up</b> ⬆️ (up the stairs)!<br>Write it like this: <b>x,y</b> &nbsp;— the tree stump is at <b>6,9</b></div>
-<div class="wrap">
+<div class="bg"></div>
+<div class="container">
+<header>
+  <div class="crown">🧭</div>
+  <h1>Map Detectives!</h1>
+  <div class="subtitle">Go across ➡️ first, then up ⬆️ — like the corridor, then the stairs!</div>
+</header>
+<div class="progress-area">
+  <div class="progress-top"><span class="level-label" id="lvl"></span><span class="score-badge" id="score"></span></div>
+  <div class="stars-row" id="stars"></div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+</div>
+<div class="card">
+  <div class="character">🕵️</div>
+  <div class="q" id="q"></div>
+  <div id="inputArea">
+    <div class="ans"><input id="ax" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="➡️" aria-label="across number"><span>,</span><input id="ay" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="⬆️" aria-label="up number"></div>
+    <button class="btn check" id="go">Check! ✔️</button>
+  </div>
+  <div class="msg" id="msg"></div>
+  <button class="btn next" id="next" style="display:none">Next ➡️</button>
   <div class="mapbox">
     <div class="ylab" id="ylab"></div>
     <div class="grid" id="grid"></div>
     <div class="xlab" id="xlab"></div>
-    <div class="axisT">across ➡️</div>
   </div>
-  <div class="panel">
-    <div class="stars" id="stars"></div>
-    <div class="q" id="q"></div>
-    <div id="inputArea"><div class="ans"><input id="ax" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="➡️" aria-label="across number"><span>,</span><input id="ay" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="⬆️" aria-label="up number"></div><button id="go">Check ✔️</button></div>
-    <div class="msg" id="msg"></div>
-    <button class="alt" id="next" style="display:none">Next ➡️</button>
-    <div class="legend">🏫 Oratory School<br>🚇 South Kensington Station<br>🌊 Serpentine lake<br>🚓 Police station<br>🪵 Tree stump</div>
-  </div>
+  <div class="keyrow"><span class="chip">🏫 Oratory School</span><span class="chip">🚇 South Kensington Station</span><span class="chip">🌊 Serpentine lake</span><span class="chip">🚓 Police station</span><span class="chip">🪵 Tree stump</span></div>
+</div>
 </div>
 <script>
 const F=[
- {name:"Oratory School",short:"Oratory School",e:"🏫",cells:[[3,1]]},
- {name:"South Kensington Station",short:"South Kensington Station",e:"🚇",cells:[[3,3]]},
- {name:"Hyde Park police station",short:"the police station",e:"🚓",cells:[[2,8]]},
- {name:"Serpentine lake",short:"the Serpentine lake",e:"🌊",cells:[[4,6],[5,6],[6,6]],icon:[5,6]},
- {name:"Tree stump",short:"the tree stump",e:"🪵",cells:[[6,9]]}
+ {short:"Oratory School",e:"🏫",cells:[[3,1]]},
+ {short:"South Kensington Station",e:"🚇",cells:[[3,3]]},
+ {short:"the police station",e:"🚓",cells:[[2,8]]},
+ {short:"the Serpentine lake",e:"🌊",cells:[[4,6],[5,6],[6,6]],icon:[5,6]},
+ {short:"the tree stump",e:"🪵",cells:[[6,9]]}
 ];
 const trees=[[4,9],[5,8],[9,5],[2,6],[7,9],[8,6],[9,9],[4,4],[7,5],[1,5],[1,10]];
-const grid=document.getElementById('grid'),cellEl={};
-const key=(x,y)=>x+','+y;
+const key=(x,y)=>x+','+y,$=id=>document.getElementById(id),cellEl={};
+const grid=$('grid');
 for(let y=10;y>=1;y--)for(let x=1;x<=10;x++){
-  const c=document.createElement('button');c.className='cell';c.style.cssText='margin:0;padding:0;min-width:0;min-height:0;overflow:hidden;line-height:1;width:auto;border-radius:0;font-weight:normal;color:inherit;background:var(--road)';
-  c.setAttribute('aria-label','square '+x+','+y);
-  if(y>=4)c.classList.add('park');
-  cellEl[key(x,y)]=c;c.onclick=()=>clickCell(x,y);grid.appendChild(c);
+  const c=document.createElement('div');c.className='cell'+(y>=4?' park':'');c.setAttribute('role','button');c.setAttribute('aria-label','square '+x+','+y);
+  c.onclick=()=>clickCell(x,y);cellEl[key(x,y)]=c;grid.appendChild(c);
 }
-Object.values(cellEl).forEach(c=>{if(c.classList.contains('park'))c.style.background='var(--park)'});
 trees.forEach(([x,y])=>cellEl[key(x,y)].textContent='🌳');
-F.forEach(f=>{
-  f.cells.forEach(([x,y])=>{if(f.e==='🌊'){const c=cellEl[key(x,y)];c.style.background='var(--lake)';}});
-  const [ix,iy]=f.icon||f.cells[0];const c=cellEl[key(ix,iy)];c.textContent=f.e;
-});
-// label fixing: park cells bg
-document.getElementById('xlab').innerHTML=[...Array(10)].map((_,i)=>'<span>'+(i+1)+'</span>').join('');
-document.getElementById('ylab').innerHTML=[...Array(10)].map((_,i)=>'<span>'+(10-i)+'</span>').join('');
+F.forEach(f=>{if(f.e==='🌊')f.cells.forEach(([x,y])=>{cellEl[key(x,y)].classList.remove('park');cellEl[key(x,y)].classList.add('lake')});
+  const [ix,iy]=f.icon||f.cells[0];cellEl[key(ix,iy)].textContent=f.e});
+$('xlab').innerHTML=[...Array(10)].map((_,i)=>'<span>'+(i+1)+'</span>').join('');
+$('ylab').innerHTML=[...Array(10)].map((_,i)=>'<span>'+(10-i)+'</span>').join('');
+
+// floating particles
+['🗺️','🧭','⭐','🌳','✨','📍'].forEach((e,i)=>{const p=document.createElement('div');p.className='particle';p.textContent=e;
+  p.style.left=(8+i*16)+'vw';p.style.animationDuration=(12+i*2)+'s';p.style.animationDelay=(i*1.7)+'s';document.body.appendChild(p)});
 
 let rounds=[],ri=0,score=0,tries=0,cur=null,done=false;
-const $=id=>document.getElementById(id);
-function shuffle(a){return a.map(v=>[Math.random(),v]).sort((p,q)=>p[0]-q[0]).map(p=>p[1])}
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 function start(){
   const typed=shuffle(F).map(f=>({t:'type',f}));
-  const clicks=shuffle(F).slice(0,3).map(f=>({t:'click',f}));
+  const clicks=shuffle(F).slice(0,3).map(f=>({t:'click',x:f.cells[0][0],y:f.cells[0][1]}));
   const rnd=[];while(rnd.length<2){const x=1+Math.floor(Math.random()*10),y=1+Math.floor(Math.random()*10);if(x!==y)rnd.push({t:'click',x,y})}
-  rounds=[...typed,...clicks.map(c=>({t:'click',x:c.f.cells[0][0],y:c.f.cells[0][1],f:c.f})),...rnd];
-  ri=0;score=0;show();
+  rounds=[...typed,...clicks,...rnd];ri=0;score=0;show();
 }
-function clear(){Object.values(cellEl).forEach(c=>c.classList.remove('hl','ok','no'))}
+function clearHl(){Object.values(cellEl).forEach(c=>c.classList.remove('hl','ok','no'))}
+function bar(){
+  $('stars').innerHTML=rounds.map((_,i)=>'<span class="star-icon'+(i<score?' earned':'')+'">⭐</span>').join('');
+  $('score').textContent='⭐ '+score;$('fill').style.width=(ri/rounds.length*100)+'%';
+  $('lvl').textContent=ri>=rounds.length?'All done!':'Question '+(ri+1)+' of '+rounds.length;
+}
 function show(){
-  clear();done=false;tries=0;$('msg').textContent='';$('msg').className='msg';$('next').style.display='none';
-  $('stars').textContent='⭐'.repeat(score)+'☆'.repeat(rounds.length-score);
+  clearHl();done=false;tries=0;$('msg').textContent='';$('msg').className='msg';$('next').style.display='none';bar();
   if(ri>=rounds.length){
     $('inputArea').style.display='none';
-    $('q').innerHTML='<div class="big">'+(score>=rounds.length-1?'🏆':'🎉')+'</div>You got '+score+' out of '+rounds.length+' stars! Brilliant map reading!';
-    $('next').style.display='';$('next').textContent='Play again 🔁';$('next').onclick=start;return;
+    $('q').innerHTML='<div class="big">'+(score>=rounds.length-1?'🏆':'🎉')+'</div><div class="end">'+score+' out of '+rounds.length+' stars! Brilliant map reading!</div>';
+    $('next').style.display='';$('next').textContent='Play again! 🎮';$('next').onclick=start;confetti();return;
   }
   cur=rounds[ri];
   if(cur.t==='type'){
     $('inputArea').style.display='';$('ax').value='';$('ay').value='';$('ax').focus();
-    $('q').innerHTML='Where is <b>'+cur.f.short+'</b>? '+cur.f.e+'<br><small>Type the coordinates (across, then up)</small>';
+    $('q').innerHTML='Where is <b>'+cur.f.short+'</b>? '+cur.f.e+'<br>Type the numbers: across, then up';
   }else{
     $('inputArea').style.display='none';
-    $('q').innerHTML='Tap the square at <b>'+cur.x+','+cur.y+'</b><br><small>Go across '+cur.x+', then up '+cur.y+'</small>';
+    $('q').innerHTML='Tap the square at <b>'+cur.x+','+cur.y+'</b><br>Across '+cur.x+', then up '+cur.y;
   }
   $('next').onclick=()=>{ri++;show()};$('next').textContent='Next ➡️';
 }
 function finish(ok,text){
-  done=true;if(ok)score++;
-  $('msg').textContent=text;$('msg').className='msg '+(ok?'good':'bad');
-  $('stars').textContent='⭐'.repeat(score)+'☆'.repeat(rounds.length-score);
-  $('next').style.display='';
-  if(ri===rounds.length-1)$('next').textContent='See my score 🏆';
+  done=true;if(ok){score++;firework(['⭐','🌟','✨','🎉'])}
+  $('msg').textContent=text;$('msg').className='msg '+(ok?'good':'bad');bar();
+  $('next').style.display='';$('next').textContent=(ri===rounds.length-1)?'See my score 🏆':'Next ➡️';
+  if(cur.t==='type')$('inputArea').style.display='none';
 }
-function answerCells(){return cur.f&&cur.t==='type'?cur.f.cells:[[cur.x,cur.y]]}
-$('go').onclick=check;$('ax').onkeydown=e=>{if(e.key==='Enter')$('ay').focus()};$('ay').onkeydown=e=>{if(e.key==='Enter')check()};
+$('go').onclick=check;
+$('ax').onkeydown=e=>{if(e.key==='Enter')$('ay').focus()};
+$('ay').onkeydown=e=>{if(e.key==='Enter')check()};
 function check(){
   if(done||cur.t!=='type')return;
-  const m=[0,$('ax').value.trim(),$('ay').value.trim()];
-  if(!/^\d+$/.test(m[1])||!/^\d+$/.test(m[2])){$('msg').textContent='Type a number in both boxes.';$('msg').className='msg bad';return}
-  const x=+m[1],y=+m[2],cells=cur.f.cells;
+  const a=$('ax').value.trim(),b=$('ay').value.trim();
+  if(!/^\d+$/.test(a)||!/^\d+$/.test(b)){$('msg').textContent='Type a number in both boxes 😊';$('msg').className='msg bad';return}
+  const x=+a,y=+b,cells=cur.f.cells;
   if(cells.some(c=>c[0]===x&&c[1]===y)){
     cells.forEach(c=>cellEl[key(...c)].classList.add('ok'));
     finish(tries===0,'Yes! '+(cells.length>1?'The lake covers '+cells.map(c=>c.join(',')).join(' and ')+'. ':'')+'It’s at '+x+','+y+' 🎉');return;
   }
   tries++;
-  const swapped=cells.some(c=>c[0]===y&&c[1]===x);
   if(tries>=2){
-    cells.forEach(c=>cellEl[key(...c)].classList.add('hl'));
-    const c=cells[Math.floor(cells.length/2)];
+    cells.forEach(c=>cellEl[key(...c)].classList.add('hl'));const c=cells[Math.floor(cells.length/2)];
     finish(false,'Not this time! Go across '+c[0]+', then up '+c[1]+': it’s '+c[0]+','+c[1]+'.');
   }else{
     $('msg').className='msg bad';
-    $('msg').textContent=swapped?'Careful! You went up first. Go ACROSS first, then up. Try again! 💪':'Not quite. Start at the bottom left, go across, then up. Try again! 💪';
+    $('msg').textContent=cells.some(c=>c[0]===y&&c[1]===x)?'Careful! You went up first. Go ACROSS first, then up. Try again! 💪':'Not quite. Start at the bottom left, go across, then up. Try again! 💪';
+    $('ax').focus();
   }
 }
 function clickCell(x,y){
   if(done||!cur||cur.t!=='click')return;
-  if(x===cur.x&&y===cur.y){cellEl[key(x,y)].classList.add('ok');finish(tries===0,'Yes! That’s '+x+','+y+' 🎉');}
+  if(x===cur.x&&y===cur.y){cellEl[key(x,y)].classList.add('ok');finish(tries===0,'Yes! That’s '+x+','+y+' 🎉')}
   else{
     tries++;cellEl[key(x,y)].classList.add('no');
-    const you=x+','+y;
-    if(tries>=2){cellEl[key(cur.x,cur.y)].classList.add('hl');finish(false,'Not this time. '+cur.x+','+cur.y+' is here: across '+cur.x+', up '+cur.y+'.');}
-    else{$('msg').className='msg bad';$('msg').textContent='That was '+you+'. Go across '+cur.x+' first, then up '+cur.y+'. Try again!';}
+    if(tries>=2){cellEl[key(cur.x,cur.y)].classList.add('hl');finish(false,'Not this time. '+cur.x+','+cur.y+' is here: across '+cur.x+', up '+cur.y+'.')}
+    else{$('msg').className='msg bad';$('msg').textContent='That was '+x+','+y+'. Go across '+cur.x+' first, then up '+cur.y+'. Try again! 💪'}
   }
+}
+function firework(em){
+  const cx=innerWidth/2,cy=innerHeight/2;
+  for(let i=0;i<9;i++){const el=document.createElement('div');el.className='star-burst';el.textContent=em[i%em.length];
+    const a=(i/9)*2*Math.PI,d=110+Math.random()*100;el.style.left=cx+'px';el.style.top=cy+'px';
+    el.style.setProperty('--tx',Math.cos(a)*d+'px');el.style.setProperty('--ty',Math.sin(a)*d+'px');
+    document.body.appendChild(el);setTimeout(()=>el.remove(),1300)}
+}
+function confetti(){
+  const cols=['#FF6EB4','#A259FF','#FFD93D','#6BCFB5','#74C7F0','#FF7F7F'];
+  for(let i=0;i<70;i++){const el=document.createElement('div');el.className='confetti-piece';
+    el.style.cssText='left:'+Math.random()*100+'vw;background:'+cols[i%cols.length]+';animation-duration:'+(2+Math.random()*3)+'s;animation-delay:'+Math.random()*1.5+'s;width:'+(6+Math.random()*10)+'px;height:'+(6+Math.random()*10)+'px;border-radius:'+(Math.random()>.5?'50%':'3px');
+    document.body.appendChild(el);setTimeout(()=>el.remove(),5500)}
 }
 start();
 </script>

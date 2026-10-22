@@ -78,7 +78,7 @@ h1{font-family:'Fredoka One','Trebuchet MS',cursive;font-weight:400;font-size:cl
 <header>
   <div class="crown">🧭</div>
   <h1>Map Detectives!</h1>
-  <div class="subtitle">Go across ➡️ first, then up ⬆️ — like the corridor, then the stairs!</div>
+  <div class="subtitle">Go across ➡️ first, then up ⬆️ — along the corridor, up the stairs!</div>
 </header>
 <div class="progress-area">
   <div class="progress-top"><span class="level-label" id="lvl"></span><span class="score-badge" id="score"></span></div>
@@ -99,7 +99,7 @@ h1{font-family:'Fredoka One','Trebuchet MS',cursive;font-weight:400;font-size:cl
 </div>
 <script>
 const F=[
- {short:"Oratory School",e:"🏫",cells:[[3,2],[4,2]]},
+ {short:"the Oratory Primary School",e:"🏫",cells:[[3,2],[4,2]]},
  {short:"South Kensington Station",e:"🚇",cells:[[3,4],[4,4]]},
  {short:"the police station",e:"🚓",cells:[[4,9],[5,9]]},
  {short:"the eastern edge of the Serpentine lake",e:"🌊",last:true,cells:[[6,7]]},
@@ -141,7 +141,7 @@ function show(){
   cur=rounds[ri];
   if(cur.t==='type'){
     $('inputArea').style.display='';$('ax').value='';$('ay').value='';$('ax').focus();
-    $('q').innerHTML='Where is <b>'+cur.f.short+'</b>? '+cur.f.e+'<br>Type the numbers: across, then up';
+    $('q').innerHTML='What is the grid reference for <b>'+cur.f.short+'</b>? '+cur.f.e+'<br>Type the numbers: across, then up';
   }else{
     $('inputArea').style.display='none';
     $('q').innerHTML='Tap the square at <b>'+cur.x+','+cur.y+'</b><br>Across '+cur.x+', then up '+cur.y;

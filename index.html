@@ -122,7 +122,7 @@ function start(){
   const typed=[...shuffle(F.filter(f=>!f.last)),...F.filter(f=>f.last)].map(f=>({t:'type',f}));
   const clicks=shuffle(F).slice(0,3).map(f=>({t:'click',x:f.cells[0][0],y:f.cells[0][1]}));
   const rnd=[];while(rnd.length<2){const x=1+Math.floor(Math.random()*10),y=1+Math.floor(Math.random()*10);if(x!==y)rnd.push({t:'click',x,y})}
-  rounds=[...typed,...clicks,...rnd];ri=0;score=0;show();
+  rounds=[...clicks,...rnd,...typed];ri=0;score=0;show();
 }
 function clearHl(){Object.values(cellEl).forEach(c=>{c.classList.remove('hl','ok','no');c.textContent=''})}
 function mark(x,y,ok){const c=cellEl[key(x,y)];if(c)c.textContent=ok?'✅':'❌'}
